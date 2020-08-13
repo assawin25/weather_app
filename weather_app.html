@@ -1,0 +1,73 @@
+<html>
+
+<title>Weather Application - Assawin</title>
+
+
+<head>
+    <div style="background-color: #b624d6; font-family: Arial;">
+        <h1>Weather Application</h1>
+        <p>Type in any city and country to see details on weather</p>
+    </div>
+    <hr />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#btnGetWeather').click(function () {
+                var resultElement = $('#resultDiv');
+                resultElement.html('');
+
+                var requestData = $('#txtCity').val() + ',' + $('#txtCountry').val();
+                $.ajax({
+                    url: 'http://api.openweathermap.org/data/2.5/weather',
+                    method: 'get',
+                    data: { q: requestData, appid:'2b92ac90c161a8b52a86175509113de9', units: 'metric' },
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.message != null) {
+                            resultElement.html(response.message);
+                        }
+                        else {
+                            var temp = response.main.temp;
+
+                            resultElement.html('Weather: ' + response.weather[0].main + '<br/>'
+                                 + 'Description: ' + response.weather[0].description + '<br/>'
+                                 + 'Temperature(In degrees): ' + temp);
+
+                            if(temp < 50) {
+                                resultElement.css("background-color", "lightblue");
+                            } else {
+                                resultElement.css("background-color", "yellow");
+                            }
+
+                        }
+                    },
+                    error: function (err) {
+                        console.log(err);
+                    }
+                });
+            });
+        });
+    </script>
+
+
+</head>
+<body style="font-family:Arial;">
+    <table>
+        <tr>
+            <td>City</td>
+            <td><input type="text" id="txtCity" /></td>
+        </tr>
+        <tr>
+            <td>Country</td>
+            <td><input type="text" id="txtCountry" /></td>
+        </tr>
+    </table>
+    <input type="button" id="btnGetWeather" value="Get Weather Data">
+    <br /><br />
+    <div id="resultDiv">
+    </div>
+
+    <h3>Made by Assawin Chittanandha</h3>
+
+</body>
+</html>
